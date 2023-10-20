@@ -151,7 +151,9 @@ static GWorkspace *gworkspace = nil;
   RELEASE (finder);
   RELEASE (launchedApps);
   RELEASE (storedAppinfoPath);
+#ifndef GNUSTEP_NO_MULTI_THREAD
   RELEASE (storedAppinfoLock);
+#endif
     
   [super dealloc];
 }
@@ -515,8 +517,10 @@ static GWorkspace *gworkspace = nil;
   
   storedAppinfoPath = [NSTemporaryDirectory() stringByAppendingPathComponent: @"GSLaunchedApplications"];
   RETAIN (storedAppinfoPath); 
-  lockpath = [storedAppinfoPath stringByAppendingPathExtension: @"lock"];   
+  lockpath = [storedAppinfoPath stringByAppendingPathExtension: @"lock"];
+#ifndef GNUSTEP_NO_MULTI_THREAD
   storedAppinfoLock = [[NSDistributedLock alloc] initWithPath: lockpath];
+#endif
 
   launchedApps = [NSMutableArray new];   
   activeApplication = nil;   

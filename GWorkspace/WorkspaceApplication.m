@@ -699,6 +699,7 @@
   NSDictionary *runningInfo = nil;
   NSDictionary *apps = nil;
   
+#ifndef GNUSTEP_NO_MULTI_THREAD
   if ([storedAppinfoLock tryLock] == NO) {
     unsigned sleeps = 0;
 
@@ -728,12 +729,15 @@
       return nil;
 	  }
   }
+#endif
 
   if ([fm isReadableFileAtPath: storedAppinfoPath]) {
     runningInfo = [NSDictionary dictionaryWithContentsOfFile: storedAppinfoPath];
   }
-        
+
+#ifndef GNUSTEP_NO_MULTI_THREAD
   [storedAppinfoLock unlock];
+#endif
   
   if (runningInfo == nil) {
     return nil;
@@ -757,6 +761,7 @@
   BOOL modified = NO;
   NSUInteger i;
     
+#ifndef GNUSTEP_NO_MULTI_THREAD
   if ([storedAppinfoLock tryLock] == NO)
     {
       unsigned sleeps = 0;
@@ -788,6 +793,7 @@
       return;
 	  }
   }
+#endif
 
   if ([fm isReadableFileAtPath: storedAppinfoPath]) {
     runningInfo = [NSMutableDictionary dictionaryWithContentsOfFile: storedAppinfoPath];
@@ -839,8 +845,10 @@
       [runningInfo writeToFile: storedAppinfoPath atomically: YES];
     }
 
-  RELEASE (newapps);  
+  RELEASE (newapps);
+#ifndef GNUSTEP_NO_MULTI_THREAD
   [storedAppinfoLock unlock];
+#endif
   RELEASE (arp);
 }
 

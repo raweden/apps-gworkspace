@@ -79,7 +79,9 @@ static NSString *GWThumbnailsDidChangeNotification = @"GWThumbnailsDidChangeNoti
       RELEASE (dictPath);
       RELEASE (thumbsDict);
       DESTROY (conn);
+#ifndef GNUSTEP_NO_MULTI_THREAD
       DESTROY (dictLock);
+#endif
       RELEASE (pathsInProcessing);
       sharedThumbnailerInstance = nil;
       [super dealloc];
@@ -95,8 +97,10 @@ static NSString *GWThumbnailsDidChangeNotification = @"GWThumbnailsDidChangeNoti
     id entry;
     BOOL isdir;
 
+#ifndef GNUSTEP_NO_MULTI_THREAD
     if (!dictLock)
       dictLock = [[NSLock alloc] init];
+#endif
 
     pathsInProcessing = [[NSMutableArray alloc] init];
 
@@ -152,10 +156,14 @@ static NSString *GWThumbnailsDidChangeNotification = @"GWThumbnailsDidChangeNoti
 
 - (void)writeDictToFile
 {
+#ifndef GNUSTEP_NO_MULTI_THREAD
   [dictLock lock];
+#endif
   NSLog(@"(%d) writing to: %@", (int)countInstances, dictPath);
   [thumbsDict writeToFile: dictPath atomically: YES];
+#ifndef GNUSTEP_NO_MULTI_THREAD
   [dictLock unlock];
+#endif
 }
 
 

@@ -173,7 +173,9 @@
   GWLaunchedApp *activeApplication;
   
   NSString *storedAppinfoPath;
+#ifndef GNUSTEP_NO_MULTI_THREAD
   NSDistributedLock *storedAppinfoLock;
+#endif
   
   NSTimer *logoutTimer;
   BOOL loggingout;
