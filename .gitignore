@@ -26,6 +26,9 @@ GNUmakefile
 # Build directories
 obj
 derived_src
+build/*
+BUILD.gn
+.gn
 
 # Build results
 *.inspector
